@@ -46,39 +46,39 @@ void myDacRccInit(void)
 }
 
 void myDacTimInit(void)			//RM page 1092
-{								//I have 96MHz on timer bus
-	TIM6->PSC=7;				//96MHz / 8 = 12MHz
-	TIM6->ARR=2;				//12MHz / 3 = 4MHz
+{					//I have 96MHz on timer bus
+	TIM6->PSC=7;			//96MHz / 8 = 12MHz
+	TIM6->ARR=2;			//12MHz / 3 = 4MHz => 4kHz waveform if 1000 samples for full period
 	TIM6->CR2|=TIM_CR2_MMS_1;	//update event to TRGO
 }
 
 void myDacPinInit(void)
 {
-	GPIOA->MODER|=GPIO_MODER_MODER4_0			//PA4 analog (recommendation from RM)
-				|GPIO_MODER_MODER4_1;
+	GPIOA->MODER|=GPIO_MODER_MODER4_0	//PA4 analog (recommendation from RM)
+			|GPIO_MODER_MODER4_1;
 }
 
 void myDacDmaInit(void)			//RM page 245
 {
-	DMA1->HIFCR=0xFFFF;			//clear flags
+	DMA1->HIFCR=0xFFFF;		//clear flags
 	DMA1->LIFCR=0xFFFF;
 	DMA1_Stream5->PAR=(uint32_t)&DAC->DHR12R1;	//set address peripherial
 	DMA1_Stream5->M0AR=(uint32_t)&mySineData;	//set address memory
-	DMA1_Stream5->NDTR=1000;					//total number of data items
-	DMA1_Stream5->CR|=DMA_SxCR_CHSEL_2			//select request DMA_SxCR ch7
-					|DMA_SxCR_CHSEL_1
-					|DMA_SxCR_CHSEL_0;
+	DMA1_Stream5->NDTR=1000;			//total number of data items
+	DMA1_Stream5->CR|=DMA_SxCR_CHSEL_2		//select request DMA_SxCR ch7
+			|DMA_SxCR_CHSEL_1
+			|DMA_SxCR_CHSEL_0;
 	DMA1_Stream5->CR|=DMA_SxCR_DIR_0
-					|DMA_SxCR_CIRC
-					|DMA_SxCR_PSIZE_0
-					|DMA_SxCR_MINC
-					|DMA_SxCR_TCIE;
+			|DMA_SxCR_CIRC
+			|DMA_SxCR_PSIZE_0
+			|DMA_SxCR_MINC
+			|DMA_SxCR_TCIE;
 }
 
 void myDacSubInit(void)			//RM page 486
 {
 	DAC->CR|=DAC_CR_DMAUDRIE1
-			|DAC_CR_BOFF1
+		|DAC_CR_BOFF1
 	        |DAC_CR_TEN1;
 }
 
@@ -86,9 +86,9 @@ void myDacSubInit(void)			//RM page 486
 //could also be generated at the very beginning in STM32 with math function
 //here I have externally generated values
 const uint16_t mySineData[1000]={	//values generated in MS Excel:
-	372,							//sine, 1000 samples
-	372,							//in range 0.3~3.0V (3V3 reference)
-	372,							//frequency is determined by timer
+	372,				//sine, 1000 samples
+	372,				//in range 0.3~3.0V (3V3 reference)
+	372,				//frequency is determined by timer (f_timer/no_of_samples)
 	373,
 	373,
 	373,
