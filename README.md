@@ -1,6 +1,7 @@
 # stm32-dac-waveform
 ### Waveform generator on STM32F767ZI with internal DAC. 
-##### Fully hardware version with use of DMA and TIMER. Values of waveform are calculated in MS Excel for sine.
+##### Fully hardware version with use of DMA and TIMER. 
+###### In this example, values of waveform are calculated in MS Excel for sine wave.
 
 0. Generate project with STM32CubeIDE
 1. Change in main.c
